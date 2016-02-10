@@ -1,12 +1,59 @@
-$.getJSON({
-  type: "GET",
-  dataType: "jsonp",
-  cache: false,
-  url: "https://api.instagram.com/v1/tags/lighthouse/media/recent?
-  access_token=46924214a4794e278bef3133f59c90c6&callback=callbackFunction",
-  success: function(response) {
+$(function() {
+  $("#getWeather").on('click', function() {
+    console.log("#getWeather")
+    $.ajax({
+    url: "http://api.wunderground.com/api/383901c8559cb3ce/geolookup/conditions/q/Canada/Vancouver.json",
+    dataType: "json",
+    success: function(parsed_json) {
+    var location = parsed_json['location']['city'];
+    var temp_f = parsed_json['current_observation']['temp_f'];
+    alert("Current temperature in " + location + " is: " + temp_f);
+    }
+  });
+  });
+    // $("#findCity").on('submit', function() {
+      var i;
+      var out;
+      var arr=[];
+    $("#findCity").on('click', function() {
+      var value = $("#autocomplete").val();  
 
-  }
-})
+    $.ajax({
+    url:"http://autocomplete.wunderground.com/aq?&c=US&cb=call=?",
+    dataType: "json",
+    data:{
+    "query":value
+    },
+    crossDomain: true,
 
-https://api.instagram.com/oauth/authorize/?client_id=25ab280b1e9e4cdaa8f7091559414141&redirect_uri=https://github.com/IamElaya&response_type=code
+    success: function (parsed_json) {
+    var c =$.each(parsed_json.RESULTS,function(i,item){
+    out=(parsed_json.RESULTS[i].name);
+     arr.push(out);
+     var table = $("#cities").find('tbody').empty();
+     arr.forEach(function(city) {
+      var tr = $("<tr>").attr('href').addClass('city').appendTo(table);
+      $("<td>").appendTo(tr).text(city);
+      });
+     });
+    console.log(c)
+
+     // });
+    //  $("#autocomplete").autocomplete({
+    //  source:arr
+
+    // });
+
+    },
+     error: function (xhr, ajaxOptions, thrownError) {
+    alert(xhr.status);
+    alert(thrownError);
+   
+        }
+
+    }); 
+  });
+ // });
+
+});
+
